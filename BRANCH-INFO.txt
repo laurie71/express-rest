@@ -1,0 +1,4 @@
+# Branch: handlers-to-routes
+
+Refactoring to use 'routes' instead of 'handlers'
+as a more flexible configuration abstraction.
