@@ -7,7 +7,7 @@ var clone = xrest.util.clone;
 var mixin = xrest.util.mixin;
 
 var BlogEntry = module.exports.BlogEntry = new xrest.Resource({
-    templates: { prefix: 'blog/entries' }
+    prefix: 'blog/entries'
 });
 
 mixin(BlogEntry, {
@@ -78,29 +78,29 @@ mixin(BlogEntry, {
     // called for: GET /blog
     // we can just rely on default behaviour for this,
     // which is render the configured template
-    itemList: function(req, res, next) {
-        sys.debug('BlogEntry.itemList()');
-        xrest.Resource.itemList.call(this, req, res, next);
-    },
+//    itemList: function(req, res, next) {
+//        sys.debug('BlogEntry.itemList()');
+//        xrest.Resource.itemList.call(this, req, res, next);
+//    },
     // called for: GET /blog/new
     // we can just rely on default behaviour for this
     // which is render the configured template
-    itemCreateForm: function(req, res, next) {
-        sys.debug('BlogEntry.itemCreateForm()');
-        xrest.Resource.itemCreateForm.call(this, req, res, next);
-    },
+//    itemCreateForm: function(req, res, next) {
+//        sys.debug('BlogEntry.itemCreateForm()');
+//        xrest.Resource.itemCreateForm.call(this, req, res, next);
+//    },
     // called for: GET /blog/:title
     // we can just rely on default behaviour
-    itemDetail: function(req, res, next) {
-        sys.debug('BlogEntry.itemDetail()');
-        xrest.Resource.itemDetail.call(this, req, res, next);
-    },
+//    itemDetail: function(req, res, next) {
+//        sys.debug('BlogEntry.itemDetail()');
+//        xrest.Resource.itemDetail.call(this, req, res, next);
+//    },
     // called for: GET /blog/:title/edit
     // we can just rely on default behaviour
-    itemUpdateForm: function(req, res, next) {
-        sys.debug('BlogEntry.itemUpdateForm()');
-        xrest.Resource.itemUpdateForm.call(this, req, res, next);
-    },
+//    itemUpdateForm: function(req, res, next) {
+//        sys.debug('BlogEntry.itemUpdateForm()');
+//        xrest.Resource.itemUpdateForm.call(this, req, res, next);
+//    },
 // fixme just here for debugging
 
 

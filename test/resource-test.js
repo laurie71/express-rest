@@ -15,36 +15,29 @@ exports.suite = vows.describe('xRest Resource').addBatch({
         },
 
         'has': {
-            'default routes': function(resource) { assert.deepEqual(resource.routes, xrest.defaults.routes); },
+//            'default routes': function(resource) { assert.deepEqual(resource.routes, xrest.defaults.routes); },
             'default formats': function(resource) { assert.deepEqual(resource.formats, xrest.defaults.formats); },
-            'default middleware': function(resource) { assert.deepEqual(resource.middleware, xrest.defaults.middleware); },
-            'default templates': function(resource) { assert.deepEqual(resource.templates, xrest.defaults.templates); }
+            'default middleware': function(resource) { assert.deepEqual(resource.middleware, xrest.defaults.middleware); }
         }
     },
     'Resource constructed with arguments': {
         topic: function() {
             return new Resource({
                 routes: [ 'GET', '/', 'dummy'],
-                templates: { index: 'index-test' },
                 middleware: [ 'dummy' ],
                 formats: [ 'sanscrit' ]
             });
         },
 
         'has': {
-            'custom routes': function(resource) {
-                assert.deepEqual(resource.routes, [ 'GET', '/', 'dummy']);
-            },
+//            'custom routes': function(resource) {
+//                assert.deepEqual(resource.routes, [ 'GET', '/', 'dummy']);
+//            },
             'custom formats': function(resource) {
                 assert.deepEqual(resource.formats, ['sanscrit']);
             },
             'custom middleware': function(resource) {
                 assert.deepEqual(resource.middleware, xrest.defaults.middleware.concat('dummy'));
-            },
-            'custom templates': function(resource) {
-                var templates = xrest.util.clone(xrest.defaults.templates);
-                templates.index = 'index-test';
-                assert.deepEqual(resource.templates, templates);
             }
         }
     }

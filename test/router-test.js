@@ -18,8 +18,9 @@ exports.suite = vows.describe('xRest Router').addBatch({
 
         'has': {
             'routes': {
-                'as an array': function(router) { assert.isArray(router.routes); },
-                'matching defaults': function(router) { assert.deepEqual(router.routes, xrest.defaults.routes); },
+                'as an array': function(router) { assert.isArray(router.routes); }
+//                ,
+//                'matching defaults': function(router) { assert.deepEqual(router.routes, xrest.defaults.routes); },
             },
             'formats': {
                 'as an array': function(router) { assert.isArray(router.formats); },
@@ -28,10 +29,6 @@ exports.suite = vows.describe('xRest Router').addBatch({
             'middleware': {
                 'as an array': function(router) { assert.isArray(router.middleware); },
                 'matching defaults': function(router) { assert.deepEqual(router.middleware, xrest.defaults.middleware); },
-            },
-            'templates': {
-                'as an object': function(router) { assert.isObject(router.templates); },
-                'matching defaults': function(router) { assert.deepEqual(router.templates, xrest.defaults.templates); }
             }
         }
     },
@@ -41,7 +38,6 @@ exports.suite = vows.describe('xRest Router').addBatch({
             var resource = new Resource();
             return new Router(app, '/', resource, {
                 routes: [ 'GET', '/', 'dummy'],
-                templates: { index: 'index-test' },
                 middleware: [ 'dummy' ],
                 formats: [ 'sanscrit' ]
             });
@@ -49,8 +45,9 @@ exports.suite = vows.describe('xRest Router').addBatch({
 
         'has': {
             'custom routes': {
-                'as an array': function(router) { assert.isArray(router.routes); },
-                'matching config': function(router) { assert.deepEqual(router.routes, [ 'GET', '/', 'dummy']); },
+                'as an array': function(router) { assert.isArray(router.routes); }
+//                ,
+//                'matching config': function(router) { assert.deepEqual(router.routes, [ 'GET', '/', 'dummy']); },
             },
             'custom formats': {
                 'as an array': function(router) { assert.isArray(router.formats); },
@@ -59,14 +56,6 @@ exports.suite = vows.describe('xRest Router').addBatch({
             'custom middleware': {
                 'as an array': function(router) { assert.isArray(router.middleware); },
                 'matching config': function(router) { assert.deepEqual(router.middleware, xrest.defaults.middleware.concat('dummy')); },
-            },
-            'templates': {
-                'as an object': function(router) { assert.isObject(router.templates); },
-                'matching config': function(router) {
-                    var templates = xrest.util.clone(xrest.defaults.templates);
-                    templates.index = 'index-test';
-                    assert.deepEqual(router.templates, templates);
-                }
             }
         }
     }
