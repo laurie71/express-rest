@@ -17,10 +17,22 @@ exports.suite = vows.describe('xRest Router').addBatch({
         },
 
         'has': {
-            'default formats': function(router) { assert.deepEqual(router.formats, xrest.defaults.formats); },
-            'default handlers': function(router) { assert.deepEqual(router.handlers, xrest.defaults.handlers); },
-            'default middleware': function(router) { assert.deepEqual(router.middleware, xrest.defaults.middleware); },
-            'default templates': function(router) { assert.deepEqual(router.templates, xrest.defaults.templates); }
+            'routes': {
+                'as an array': function(router) { assert.isArray(router.routes); },
+                'matching defaults': function(router) { assert.deepEqual(router.routes, xrest.defaults.routes); },
+            },
+            'formats': {
+                'as an array': function(router) { assert.isArray(router.formats); },
+                'matching defaults': function(router) { assert.deepEqual(router.formats, xrest.defaults.formats); },
+            },
+            'middleware': {
+                'as an array': function(router) { assert.isArray(router.middleware); },
+                'matching defaults': function(router) { assert.deepEqual(router.middleware, xrest.defaults.middleware); },
+            },
+            'templates': {
+                'as an object': function(router) { assert.isObject(router.templates); },
+                'matching defaults': function(router) { assert.deepEqual(router.templates, xrest.defaults.templates); }
+            }
         }
     },
     'Router constructed with arguments': {
@@ -28,7 +40,7 @@ exports.suite = vows.describe('xRest Router').addBatch({
             var app = express.createServer();
             var resource = new Resource();
             return new Router(app, '/', resource, {
-                handlers: { index: 'index_test' },
+                routes: [ 'GET', '/', 'dummy'],
                 templates: { index: 'index-test' },
                 middleware: [ 'dummy' ],
                 formats: [ 'sanscrit' ]
@@ -36,23 +48,25 @@ exports.suite = vows.describe('xRest Router').addBatch({
         },
 
         'has': {
-            'custom formats': function(router) {
-                assert.deepEqual(router.formats, ['sanscrit']);
+            'custom routes': {
+                'as an array': function(router) { assert.isArray(router.routes); },
+                'matching config': function(router) { assert.deepEqual(router.routes, [ 'GET', '/', 'dummy']); },
             },
-            'custom handlers': function(router) {
-                var handlers = xrest.util.clone(xrest.defaults.handlers);
-                handlers.index = 'index_test';
-
-                assert.deepEqual(router.handlers, handlers);
+            'custom formats': {
+                'as an array': function(router) { assert.isArray(router.formats); },
+                'matching config': function(router) { assert.deepEqual(router.formats, ['sanscrit']); }
             },
-            'custom middleware': function(router) {
-                assert.deepEqual(router.middleware, xrest.defaults.middleware.concat('dummy'));
+            'custom middleware': {
+                'as an array': function(router) { assert.isArray(router.middleware); },
+                'matching config': function(router) { assert.deepEqual(router.middleware, xrest.defaults.middleware.concat('dummy')); },
             },
-            'custom templates': function(router) {
-                var templates = xrest.util.clone(xrest.defaults.templates);
-                templates.index = 'index-test';
-
-                assert.deepEqual(router.templates, templates);
+            'templates': {
+                'as an object': function(router) { assert.isObject(router.templates); },
+                'matching config': function(router) {
+                    var templates = xrest.util.clone(xrest.defaults.templates);
+                    templates.index = 'index-test';
+                    assert.deepEqual(router.templates, templates);
+                }
             }
         }
     }

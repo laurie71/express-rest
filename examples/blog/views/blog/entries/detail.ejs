@@ -1,19 +1,19 @@
-<%- partial('entry') %>
+<%- partial('entry', { object: this.entry, as: 'entry' }) %>
 
 <div class="article">
-  <h2><%= entry.comments.length %> Responses</h2>
-  <% for (var i = 0; i < entry.comments.length; i++) { %>
+  <h2><%= this.entry.comments.length %> Responses</h2>
+  <% for (var i = 0; i < this.entry.comments.length; i++) { %>
   <div class="comment">
     <a href="#"><img src="/images/userpic.gif" width="40" height="40" alt="user" class="userpic" /></a>
-    <p><a href="#"><%= entry.comments[i].author %></a>
-        Says:<br /><%= entry.comments[i].posted %></p>
-        <%- entry.comments[i].body %>
+    <p><a href="#"><%= this.entry.comments[i].author %></a>
+        Says:<br /><%= this.entry.comments[i].posted %></p>
+        <%- this.entry.comments[i].body %>
   </div>
   <% } %>
 </div>
 <div class="article">
   <h2>Leave a Reply</h2>
-  <form action="/blog/<%= entry.title %>/comments/new" method="post" id="leavereply">
+  <form action="/blog/<%= this.entry.title %>/comments/new" method="post" id="leavereply">
   <ol><li>
     <label for="name">Name (required)</label>
     <input id="name" name="name" class="text" />

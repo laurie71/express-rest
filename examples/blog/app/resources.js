@@ -11,8 +11,13 @@ var BlogEntry = module.exports.BlogEntry = new xrest.Resource({
 });
 
 mixin(BlogEntry, {
-    // called for: GET /blog
-    'index': function(req, res, next) {
+    // ********************
+    // ********************
+
+    // called for: * /blog
+    fetchAll: function(req, res, next) {
+        sys.debug('BlogEntry.fetchAll()');
+
         // fetch latest 5 blog entries from database,
         // with comments and body summarized:
         var entries = clone(data.slice(0, 5));
@@ -21,93 +26,86 @@ mixin(BlogEntry, {
             entry.comments = entry.comments && entry.comments.length || 0;
         });
 
-        // pass the results to next:
-        next({ entries: entries });
+        // store results on request and pass control to
+        // the next route matching this request:
+        req.entries = entries;
+        next();
     },
 
-    // called for: GET /blog/new
-    // we can just rely on default behaviour for this
-    //'create_new': function(req, res, next) {}
-
-    // called for: POST /blog (todo: or POST /blog/new)
-    'create': function(req, res, next) {
-        // apply per-method middleware:
-        // need to be authenticated to post entries:
-        middleware.authenticated(req, res, function() {
-            // get the logged in user
-            var user = req.session.authUser;
-
-            // build a new blog entry from the form data:
-            var entry = {
-                title:  req.param('title'),
-                tags:   req.param('tags'),
-                body:   req.param('body'),
-                posted: new Date(), // fixme: format date
-                by:     user
-            };
-
-            // validate the entry:
-            if (! entry.title) {
-                // validation failed; return to form
-                req.flash('error', 'Blog entry title is required!');
-            } else {
-                // validation passed; store the entry
-                req.flash('info', 'Blog entry posted!');
-                data.unshift(entry);
-            }
-
-            // let xRest redirect to the new entry.
-            // if entry.title is null/undefined,
-            // xRest will automatically return to
-            // the form.
-            next({'id': entry.title });
-        });
-    },
-
-    // called for: GET /blog/<title>
-    'detail': function(req, res, next) {
-        // retrieve the blog entry
-        var title = req.param('id');
-        var entry = this._fetch(title);
-
-        // and return it (xRest will Do The Right Thing if entry
-        // is null/undefined, and return a 404 response in the
-        // appropriate format)
-        next({entry: entry});
-    },
-
-    // called for: GET /blog/<title>/edit
-    // we can just rely on default behaviour again
-    //'detail_edit': function(req, res, next) {}
-
-    // called for: PUT /blog/<title>
-    'update': function(req, res, next) {
-        // retrieve the blog entry
-        var title = req.params('id');
-        var entry = this._fetch(title);
-
-        if (entry) {
-            // merge form data, validate, etc...
-            xrest.mixin(entry, req.body);
-        }
-
-        // todo: how to signal failed edit?
-        next({entry: entry});
-    },
-
-    // called for: DELETE /blog/<title>
-    'remove': function(req, res, next) {
-        // todo
+    // called for: POST /blog
+    itemCreate: function(req, res, next) {
+        sys.debug('BlogEntry.itemCreate()');
+        xrest.Resource.itemCreate.call(this, req, res, next);
+        // TODO
     },
 
 
-    // resource-specific utility method to fetch an
-    // instance of the resource from the database
-    _fetch: function(title) {
-        return data.reduce(function(prev, next) {
+    // ********************
+    // ********************
+
+    // called for: * /blog/:title/:op?
+    fetchItem: function(req, res, next) {
+        // fetch the blog entry
+        var title = req.param('id'); // xxx id? title?
+        var entry = data.reduce(function(prev, next) {
             return (next.title == title) ? next : prev;
         }, null);
+
+        // store it on request and forward to next route
+        req.entry = entry;
+        next();
     },
+
+    // called for: PUT /blog/:title
+    itemUpdate: function(req, res, next) {
+        sys.debug('BlogEntry.itemUpdate()');
+        xrest.Resource.itemUpdate.call(this, req, res, next);
+        // TODO
+    },
+
+    // called for: DELETE /blog/:title
+    itemRemove: function(req, res, next) {
+        sys.debug('BlogEntry.itemRemove()');
+        xrest.Resource.itemRemove.call(this, req, res, next);
+        // TODO
+    },
+
+
+    // ********************
+    // ********************
+
+// fixme just here for debugging
+    // called for: GET /blog
+    // we can just rely on default behaviour for this,
+    // which is render the configured template
+    itemList: function(req, res, next) {
+        sys.debug('BlogEntry.itemList()');
+        xrest.Resource.itemList.call(this, req, res, next);
+    },
+    // called for: GET /blog/new
+    // we can just rely on default behaviour for this
+    // which is render the configured template
+    itemCreateForm: function(req, res, next) {
+        sys.debug('BlogEntry.itemCreateForm()');
+        xrest.Resource.itemCreateForm.call(this, req, res, next);
+    },
+    // called for: GET /blog/:title
+    // we can just rely on default behaviour
+    itemDetail: function(req, res, next) {
+        sys.debug('BlogEntry.itemDetail()');
+        xrest.Resource.itemDetail.call(this, req, res, next);
+    },
+    // called for: GET /blog/:title/edit
+    // we can just rely on default behaviour
+    itemUpdateForm: function(req, res, next) {
+        sys.debug('BlogEntry.itemUpdateForm()');
+        xrest.Resource.itemUpdateForm.call(this, req, res, next);
+    },
+// fixme just here for debugging
+
+
+    // ********************
+    // ********************
 
     toString: function() { return '[blog entries]'; }
 });
