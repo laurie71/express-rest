@@ -1,0 +1,24 @@
+{
+  "version": "0.1.0",
+  "name": "express-rest",
+  "description": "xRest: RESTful Routing for ExpressJS/Node",
+  "homepage": "http://laurie71.github.com/express-rest/",
+  "author": "Laurie Harper (http://laurie71.github.com/)",
+
+  "main": "lib/express-rest/index",
+  "directories": {
+    "lib": "lib/express-rest"
+  },
+  "scripts": {
+    "test": "vows"
+  },
+
+  "engines": {
+    "node": ">=0.2.5"
+  },
+  "dependencies": {
+    "express": ">=1.0.3",
+
+    "ejs": ">=0.2.1"
+  }
+}
