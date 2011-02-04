@@ -1,0 +1,45 @@
+<div class="sidebar">
+  <div class="gadget">
+    <h2 class="star">Sidebar Menu</h2>
+    <ul class="sb_menu">
+      <li><a href="/">Example Home</a></li>
+      <li><a href="http://laurie71.github.com/express-rest/">xRest for Express</a></li>
+      <li><a href="http://expressjs.com/">ExpressJS</a></li>
+      <li><a href="http://nodejs.org/">NodeJS</a></li>
+    </ul>
+  </div>
+  <div class="gadget">
+    <h2 class="star">Debug</h2>
+    <ul class="ex_menu">
+<%  var os = [], fs = [], vars = [] %>
+<%  for (var p in this) { %>
+<%      var v = this[p], t = typeof(v) %>
+<%      if (t == 'function') { %>
+<%          fs.push(p); %>
+<%      } else if (t == 'object' && v != null) { %>
+<%          os.push(p); %>
+<%      } else { %>
+<%          vars.push(p); %>
+<%      } %>
+<%  } %>
+<%  vars.sort() %>
+<%  fs.sort() %>
+<%  os.sort() %>
+        <li><strong style="font-size: larger">Variables:</strong><ul>
+<%  for (var i = 0; i < vars.length; i++) { %>
+            <li><strong><%= vars[i] %></strong>: <%= this[vars[i]] %></li>
+<%  } %>
+        </ul></li>
+        <li><strong style="font-size: larger">Objects:</strong><ul>
+<%  for (var i = 0; i < os.length; i++) { %>
+            <li><strong><%= os[i] %></strong>: <%= this[os[i]].toString() %></li>
+<%  } %>
+        </ul></li>
+        <li><strong style="font-size: larger">Functions:</strong><ul>
+<%  for (var i = 0; i < fs.length; i++) { %>
+            <li><strong><%= fs[i] %></strong>: <em>[Function]</em></li>
+<%  } %>
+        </ul></li>
+    </ul>
+  </div>
+</div>

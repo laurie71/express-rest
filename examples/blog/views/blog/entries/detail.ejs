@@ -1,0 +1,31 @@
+<%- partial('entry') %>
+
+<div class="article">
+  <h2><%= entry.comments.length %> Responses</h2>
+  <% for (var i = 0; i < entry.comments.length; i++) { %>
+  <div class="comment">
+    <a href="#"><img src="/images/userpic.gif" width="40" height="40" alt="user" class="userpic" /></a>
+    <p><a href="#"><%= entry.comments[i].author %></a>
+        Says:<br /><%= entry.comments[i].posted %></p>
+        <%- entry.comments[i].body %>
+  </div>
+  <% } %>
+</div>
+<div class="article">
+  <h2>Leave a Reply</h2>
+  <form action="/blog/<%= entry.title %>/comments/new" method="post" id="leavereply">
+  <ol><li>
+    <label for="name">Name (required)</label>
+    <input id="name" name="name" class="text" />
+  </li><li>
+    <label for="email">Email Address (required)</label>
+    <input id="email" name="email" class="text" />
+  </li><li>
+    <label for="message">Your Message</label>
+    <textarea id="message" name="message" rows="8" cols="50"></textarea>
+  </li><li>
+    <input type="image" name="imageField" id="imageField" src="/images/submit.gif" class="send" />
+    <div class="clr"></div>
+  </li></ol>
+  </form>
+</div>
