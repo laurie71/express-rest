@@ -1,74 +1,98 @@
-http://architects.dzone.com/news/common-rest-design-pattern
+# xRest: RESTful Routing for ExpressJS
 
-# Features:
+*Note*: _this project is a work in progress. It's functional and
+useable already, but missing several planned features, and still
+subject to API changes._
 
-* RESTful resources can be mounted at an arbitrary URL
+xRest provides highly configurable, extensible support for RESTful
+resources in Express. By supplying xRest with just a few lines of
+configuration, code, and templates, you get intelligent, re-mappable
+request routing, support for multiple rendering formats (currently,
+HTML and JSON out of the box) and more.
+
+If you need a technical introduction to REST and RESTful resources,
+Architect Zone's Common REST Design Pattern article [1] is a great
+place to start.
+
+[1] http://architects.dzone.com/news/common-rest-design-pattern
+
+
+## xRest Features:
+
+* xRest resources can be mounted to any URL path
+* Routes can be customized/overridden:
+   ** globally for all xRest resources (default routes)
+   ** when a resource is defined (per-resource routes)
+   ** when a resource is mounted (per-mount routes) [TODO]
+* Route middleware can be applied:
+   ** globally for all xRest resources (default middleware)
+   ** when a resource is defined (per-resource middleware)
+   ** when a resource is mounted (per-mount middleware)
+   ** within individutal routes (per-route middleware) [TODO]
 * RESTful resources can be defined recursively (a resource can
-      internally mount another resource)
-* URL/handler mappings can be customized/overridden per resource
-   ** globally for the app (default mappings)
-   ** when it is defined (per-resource mappings)
-   ** when it is mounted (per-mount-point mappings)
-* Route middleware can be applied for a resource:
-   ** when it is defined (per-resource middleware)
-   ** when it is mounted (per-mount-point middleware)
-   ** within a handler (per-method middleware)
+      internally mount another resource) [TODO]
+* Content Negotiation: HTML/JSON/XML formats for free, and
+    easilly extensible with other custom formats [TODO]
 
-* content negotiation: HTML/JSON/XML formats for free
-          xxx need global/per-mount/per-resource/per-method 'capabilities declaration'
 
-* Resources define base configuration and service methods; a few
-      lines of configuration and code exposes a resource as HTML/JSON/XML
+## Usage:
 
-# Usage:
+Creating an xRest resource is easy:
 
     var sys = require('sys');
+    var xrest = require('express-rest');
+
+    function UsersResource();
+    sys.inherits(UsersResource, xrest.Resource);
+
+    UsersResource.prototype.fetchItem = function(req, res, next) {
+        var id = req.id; // default item key set by xRest
+        var item = ...;  // fetch user from database
+        req.item = item; // store it for use in later route handlers
+    };
+
+You can add other functions to the prototype as needed. The
+default configuration will call various functions if you've
+defined them, to pre-fetch data or process requests which
+create or change it.
+
+Once you have a resource, you need to mount it in your Express
+application:
+
     var express = require('express');
-    var rest = require('express-restful');
-
     var app = express.createServer();
-    app.use(rest.restful({
-        mappings: { ... }             // default mappings
-    }));
+    app.restful('/users', new UsersResource());
 
-    var route_middleware = function(req, res, next) { ...; next(); };
-    app.restful(/forum/:title?, route_middleware, {
-        mappings: { ... },            // per-mount-point mappings
-        resource: function() {
-            this.mappings = { ... };  // per-resource mappings
-        }
-    });
+Done! xRest automatically sets up various routes for you:
 
-    function MyResource() {}
-    sys.inherits(MyResource, rest.ResourceCollection);
+| =HTTP Method= | =Path=         | =Calls Handler=  | =Renders Template= |
+| GET           | /$             | fetchAll         | /(none)/ |
+| GET           | /$             | itemList         | index |
+| POST          | /$             | itemCreate       | /(none)/ |
+| GET           | /{new}         | itemCreateForm   | create_new |
+| GET           | /:{key}/:op?   | fetchItem        | /(none)/ |
+| GET           | /:{key}        | itemDetail       | detail |
+| PUT           | /:{key}        | itemUpdate       | /(none)/ |
+| GET           | /:{key}/{edit} | itemUpdateForm   | detail_edit |
+| DEL           | /:{key}        | itemRemove       | /(none)/ |
+
+Paths use ``{name}``-style placeholders, the values of which you can
+override at various levels (globally, per-resource, per-mount).
+
+You implement the handler functions you need on your resource, and
+supply the templates. The default configuration expects several
+templates to be defined for serving HTML responses, as shown above.
+If you only need to serve JSON, though, you don't need any of them.
 
 
-Standard Handler Mappings:
+## More Information
 
-GET      /res/forums           ->  index     => [{...}, ...]
-GET      /res/forums?<query>   ->  index     => [{...}, ...]
-PUT      /res/forums           ->   xxx      (or could alias to POST)
-POST     /res/forums           ->  create
-DELETE   /res/forums           ->   xxx
+Additional documentation, including a full API reference, is available
+on the xRest website [2] on GitHub.
 
-GET      /res/forums/:id       ->  detail
-PUT      /res/forums/:id       ->  update
-POST     /res/forums/:id       ->   xxx
-DELETE   /res/forums/:id       ->  remove
+[2] http://laurie71.github.com/express-rest/
 
-GET     /res/forums/new        ->  create_new
-GET     /res/forums/:id/edit   ->  detail_edit
+## License
 
-TODO: ':id' needs to be configurable
-
-Standard Template Mappings:
-(examples assuming view engine is ejs; no extension is added by default)
-    {
-        layout: undefined,      // use Express default layout
-        prefix: undefined,      // look for templates in <app>/views/...
-        index:  'index',        // -> <app>/views/prefix/index.ejs'
-        detail: 'detail',       // -> <app>/views/prefix/detail.ejs'
-        create: 'detail_new',   // -> <app>/views/prefix/detail_new.ejs'
-        update: 'detail_edit',  // -> <app>/views/prefix/detail_edit.ejs'
-    }
-
+xRest is distributed under the MIT license. Contributions are very
+welcome :-)
