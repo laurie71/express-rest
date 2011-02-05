@@ -48,7 +48,7 @@ app.get('/index.html', function(req, res) { res.render('index'); });
 
 // TODO explain
 sys.debug('app: mount /blog');
-app.restful('/blog', {}, blog.entries);
+app.restful('/blog', blog.entries);
 //app.restful('/blog/:title/comments', {}, blog.comments); TODO
 
 
