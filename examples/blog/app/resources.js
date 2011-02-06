@@ -6,11 +6,11 @@ var data = require('./data');
 var clone = xrest.util.clone;
 var mixin = xrest.util.mixin;
 
-var BlogEntry = module.exports.BlogEntry = new xrest.Resource({
-    prefix: 'blog/entries'
-});
 
-mixin(BlogEntry, {
+exports.BlogEntry = new xrest.Resource({
+    prefix: 'blog/entries',
+
+
     // ********************
     // ********************
 

@@ -41,17 +41,16 @@ Creating an xRest resource is easy:
     var sys = require('sys');
     var xrest = require('express-rest');
 
-    function UsersResource();
-    sys.inherits(UsersResource, xrest.Resource);
+    var users = new xrest.Resource({
+        fetchItem: function(req, res, next) {
+            var id = req.id; // default item key set by xRest
+            var item = ...;  // fetch user from database
+            req.item = item; // store it for use in later route handlers
+        },
+        // ... other handler functions and/or configuration properties
+    });
 
-    UsersResource.prototype.fetchItem = function(req, res, next) {
-        var id = req.id; // default item key set by xRest
-        var item = ...;  // fetch user from database
-        req.item = item; // store it for use in later route handlers
-    };
-
-You can add other functions to the prototype as needed. The
-default configuration will call various functions if you've
+The default configuration will call various functions if you've
 defined them, to pre-fetch data or process requests which
 create or change it.
 
@@ -60,7 +59,7 @@ application:
 
     var express = require('express');
     var app = express.createServer();
-    app.restful('/users', new UsersResource());
+    app.restful('/users', users);
 
 Done! xRest automatically sets up various routes for you:
 

@@ -23,7 +23,7 @@ exports.suite = vows.describe('xRest Resource').addBatch({
     'Resource constructed with arguments': {
         topic: function() {
             return new Resource({
-                routes: [ 'GET', '/', 'dummy'],
+                routes: [[ 'GET', '/', 'dummy']],
                 middleware: [ 'dummy' ],
                 formats: [ 'sanscrit' ]
             });
