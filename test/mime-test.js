@@ -80,14 +80,14 @@ function acceptTests(tests) {
 function matchTests(tests) {
     var context = {
         topic: function() {
-//console.log(sys.inspect(this));
             return this.context.name
         }
     };
 
-    for (var supported in tests) {
+    for (var input in tests) {
         (function() {
-            expected = tests[supported];
+            var supported = input;
+            var expected = tests[supported];
             supported = supported.split(/\s*,\s*/);
             var selected = mime.match(supported, 'text/xml, application/xml, application/xhtml+xml, text/html;q=0.9, text/plain;q=0.8, image/png,*/*;q=0.5');
 
@@ -108,67 +108,64 @@ function matchTests(tests) {
 }
 
 exports.suite = vows.describe('xRest Mime-Type Handling').addBatch({
-//    'mediaType correctly parses:': mediaTypeTests({
-//        '*/*': { type: '*', subtype: '*', params: [] },
-//        'text/*': { type: 'text', subtype: '*', params: [] },
-//        'text/plain': { type: 'text', subtype: 'plain', params: [] },
-//        'text/plain;p1=0': { type: 'text', subtype: 'plain', params: [['p1', 0]]},
-//        'text/plain;p1=0;p2="quoted val"': { type: 'text', subtype: 'plain', params: [['p1', '0'], ['p2', '"quoted val"']]},
-//        'text/plain ; p1 = 0 ; p2 = "quoted val"': { type: 'text', subtype: 'plain', params: [['p1', '0'], ['p2', '"quoted val"']]}
-//    }),
-//
-//    'mediaRange correctly parses:': mediaRangeTests({
-//        '*/*': { range: { type: '*', subtype: '*', params: []}, quality: 1.0, extensions: [] },
-//        'text/*': { range: { type: 'text', subtype: '*', params: []}, quality: 1.0, extensions: [] },
-//        'text/plain': { range: { type: 'text', subtype: 'plain', params: []}, quality: 1.0, extensions: [] },
-//        'text/plain;p1=1;p2=2': { range: { type: 'text', subtype: 'plain', params: [['p1','1'],['p2','2']]}, quality: 1.0, extensions: [] },
-//        'text/plain;q=0.5': { range: { type: 'text', subtype: 'plain', params: []}, quality: 0.5, extensions: [] },
-//        'text/plain;p1=1;p2=2;q=0.5': { range: { type: 'text', subtype: 'plain', params: [['p1','1'],['p2','2']]}, quality: 0.5, extensions: [] },
-//        'text/plain;p1=1;p2=2;q=0.5;e1=1': { range: { type: 'text', subtype: 'plain', params: [['p1','1'],['p2','2']]}, quality: 0.5, extensions: [['e1','1']] },
-//        'text/plain;p1=1;p2=2;q=0.5;e1=1;e2=2': { range: { type: 'text', subtype: 'plain', params: [['p1','1'],['p2','2']]}, quality: 0.5, extensions: [['e1','1'],['e2','2']] },
-//        'text/plain ; p1=1 ; p2 = 2 ; q = 0.5 ; e1 = 1': { range: { type: 'text', subtype: 'plain', params: [['p1','1'],['p2','2']]}, quality: 0.5, extensions: [['e1','1']] },
-//
-//        'text/plain ; p1=1 ; p2 = 2 ; q = 0.5 ; e1 = 1': { range: { type: 'text', subtype: 'plain', params: [['p1','1'],['p2','2']]}, quality: 0.5, extensions: [['e1','1']] }
-//    }),
-//
-//    'accept correctly parses:': acceptTests({
-//        'text/plain, text/*, */*': [[ 'text','plain',[],1,[] ],[ 'text','*',[],1,[] ],[ '*','*',[],1,[] ]],
-//
-//        // IE style:
-//        'image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/x-shockwave-flash, */*':
-//        [ [ 'image',        'gif',              [], 1,[] ]
-//        , [ 'image',        'x-xbitmap',        [], 1,[] ]
-//        , [ 'image',        'jpeg',             [], 1,[] ]
-//        , [ 'image',        'pjpeg',            [], 1,[] ]
-//        , [ 'application',  'x-shockwave-flash',[], 1,[] ]
-//        , [ '*',            '*',                [], 1,[] ]
-//        ],
-//
-//        // FF style:
-//        'text/xml, application/xml, application/xhtml+xml, text/html;q=0.9, text/plain;q=0.8, image/png,*/*;q=0.5':
-//        [ [ 'text',         'xml',      [], 1.0, [] ]
-//        , [ 'application',  'xml',      [], 1.0, [] ]
-//        , [ 'application',  'xhtml+xml',[], 1.0, [] ]
-//        , [ 'text',         'html',     [], 0.9, [] ]
-//        , [ 'text',         'plain',    [], 0.8, [] ]
-//        , [ 'image',        'png',      [], 1.0, [] ]
-//        , [ '*',            '*',        [], 0.5, [] ]
-//        ]
-//    }),
+    'mediaType correctly parses:': mediaTypeTests({
+        '*/*': { type: '*', subtype: '*', params: [] },
+        'text/*': { type: 'text', subtype: '*', params: [] },
+        'text/plain': { type: 'text', subtype: 'plain', params: [] },
+        'text/plain;p1=0': { type: 'text', subtype: 'plain', params: [['p1', 0]]},
+        'text/plain;p1=0;p2="quoted val"': { type: 'text', subtype: 'plain', params: [['p1', '0'], ['p2', '"quoted val"']]},
+        'text/plain ; p1 = 0 ; p2 = "quoted val"': { type: 'text', subtype: 'plain', params: [['p1', '0'], ['p2', '"quoted val"']]}
+    }),
 
-    'match correctly selects from': {
-        '':
-            matchTests({
-//                'text/plain':
-//                    [ { type: 'text/plain', quality: 0.8 }
-//                    ],
-//
-                'text/html, text/plain, other/type':
-                    [ { type: 'text/html',  quality: 0.9 }
-                    , { type: 'text/plain', quality: 0.8 }
-                    , { type: 'other/type', quality: 0.5 }
-                    ],
-            })
-    }
+    'mediaRange correctly parses:': mediaRangeTests({
+        '*/*': { range: { type: '*', subtype: '*', params: []}, quality: 1.0, extensions: [] },
+        'text/*': { range: { type: 'text', subtype: '*', params: []}, quality: 1.0, extensions: [] },
+        'text/plain': { range: { type: 'text', subtype: 'plain', params: []}, quality: 1.0, extensions: [] },
+        'text/plain;p1=1;p2=2': { range: { type: 'text', subtype: 'plain', params: [['p1','1'],['p2','2']]}, quality: 1.0, extensions: [] },
+        'text/plain;q=0.5': { range: { type: 'text', subtype: 'plain', params: []}, quality: 0.5, extensions: [] },
+        'text/plain;p1=1;p2=2;q=0.5': { range: { type: 'text', subtype: 'plain', params: [['p1','1'],['p2','2']]}, quality: 0.5, extensions: [] },
+        'text/plain;p1=1;p2=2;q=0.5;e1=1': { range: { type: 'text', subtype: 'plain', params: [['p1','1'],['p2','2']]}, quality: 0.5, extensions: [['e1','1']] },
+        'text/plain;p1=1;p2=2;q=0.5;e1=1;e2=2': { range: { type: 'text', subtype: 'plain', params: [['p1','1'],['p2','2']]}, quality: 0.5, extensions: [['e1','1'],['e2','2']] },
+        'text/plain ; p1=1 ; p2 = 2 ; q = 0.5 ; e1 = 1': { range: { type: 'text', subtype: 'plain', params: [['p1','1'],['p2','2']]}, quality: 0.5, extensions: [['e1','1']] },
+
+        'text/plain ; p1=1 ; p2 = 2 ; q = 0.5 ; e1 = 1': { range: { type: 'text', subtype: 'plain', params: [['p1','1'],['p2','2']]}, quality: 0.5, extensions: [['e1','1']] }
+    }),
+
+    'accept correctly parses:': acceptTests({
+        'text/plain, text/*, */*': [[ 'text','plain',[],1,[] ],[ 'text','*',[],1,[] ],[ '*','*',[],1,[] ]],
+
+        // IE style:
+        'image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/x-shockwave-flash, */*':
+        [ [ 'image',        'gif',              [], 1,[] ]
+        , [ 'image',        'x-xbitmap',        [], 1,[] ]
+        , [ 'image',        'jpeg',             [], 1,[] ]
+        , [ 'image',        'pjpeg',            [], 1,[] ]
+        , [ 'application',  'x-shockwave-flash',[], 1,[] ]
+        , [ '*',            '*',                [], 1,[] ]
+        ],
+
+        // FF style:
+        'text/xml, application/xml, application/xhtml+xml, text/html;q=0.9, text/plain;q=0.8, image/png,*/*;q=0.5':
+        [ [ 'text',         'xml',      [], 1.0, [] ]
+        , [ 'application',  'xml',      [], 1.0, [] ]
+        , [ 'application',  'xhtml+xml',[], 1.0, [] ]
+        , [ 'text',         'html',     [], 0.9, [] ]
+        , [ 'text',         'plain',    [], 0.8, [] ]
+        , [ 'image',        'png',      [], 1.0, [] ]
+        , [ '*',            '*',        [], 0.5, [] ]
+        ]
+    }),
+
+    'match correctly selects': matchTests({
+        'text/plain':
+            [ { type: 'text/plain', quality: 0.8 }
+            ],
+
+        'text/html, text/plain, other/type':
+            [ { type: 'text/html',  quality: 0.9 }
+            , { type: 'text/plain', quality: 0.8 }
+            , { type: 'other/type', quality: 0.5 }
+            ]
+    })
 });
 
