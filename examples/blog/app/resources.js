@@ -26,9 +26,9 @@ exports.BlogEntry = new xrest.Resource({
             entry.comments = entry.comments && entry.comments.length || 0;
         });
 
-        // store results on request and pass control to
-        // the next route matching this request:
-        req.entries = entries;
+        // store results in request context and pass
+        // control to the next route matching this request:
+        req.context.entries = entries;
         next();
     },
 
@@ -52,7 +52,7 @@ exports.BlogEntry = new xrest.Resource({
         }, null);
 
         // store it on request and forward to next route
-        req.entry = entry;
+        req.context.entry = entry;
         next();
     },
 

@@ -1,32 +1,32 @@
 <div class="article">
-  <h2><a href="/blog/<%= this.entry.title %>/"><%= this.entry.title %></a></h2>
-  <p>Posted by <a href="#"><%= this.entry.author %></a>,
-      <%= this.entry.posted %>
+  <h2><a href="/blog/<%= entry.title %>/"><%= entry.title %></a></h2>
+  <p>Posted by <a href="#"><%= entry.author %></a>,
+      <%= entry.posted %>
       &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-      <a href="/blog/<%= this.entry.title %>/edit">Edit</a>
+      <a href="/blog/<%= entry.title %>/edit">Edit</a>
 
       <br>
       Filed under:
-      <% if (! this.entry.categories && this.entry.categories.length) { %>
+      <% if (! entry.categories && entry.categories.length) { %>
       (no categories)
       <% } else { %>
-          <% for (j = 0; j < this.entry.categories.length; j++) { %>
-          <a href="#"><%= this.entry.categories[j] %></a>
+          <% for (j = 0; j < entry.categories.length; j++) { %>
+          <a href="#"><%= entry.categories[j] %></a>
           <% } %>
       <% } %>
   </p>
 
-  <%- this.entry.body %>
+  <%- entry.body %>
 
   <p class="uarticle">
       Tagged:
-      <% if (! this.entry.tags && this.entry.tags.length) { %>
+      <% if (! entry.tags && entry.tags.length) { %>
       (no tags)
       <% } else { %>
-          <% for (j = 0; j < this.entry.tags.length; j++) { %>
-          <a href="#"><%= this.entry.tags[j] %></a>
+          <% for (j = 0; j < entry.tags.length; j++) { %>
+          <a href="#"><%= entry.tags[j] %></a>
           <% } %>
       <% } %>
   </p>
-  <p class="uarticle"><a href="/blog/<%= this.entry.title %>/">Comments (<%= (this.entry.comments && this.entry.comments.length) || this.entry.comments || 0 %>)</a></p>
+  <p class="uarticle"><a href="/blog/<%= entry.title %>/">Comments (<%= (entry.comments && entry.comments.length) || entry.comments || 0 %>)</a></p>
 </div>
