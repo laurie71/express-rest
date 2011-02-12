@@ -33,7 +33,7 @@ exports.BlogEntry = new xrest.Resource({
     },
 
     // called for: POST /blog
-    itemCreate: function(req, res, next) {
+    createItem: function(req, res, next) {
         sys.debug('BlogEntry.itemCreate()');
         xrest.Resource.itemCreate.call(this, req, res, next);
         // TODO
@@ -57,14 +57,14 @@ exports.BlogEntry = new xrest.Resource({
     },
 
     // called for: PUT /blog/:title
-    itemUpdate: function(req, res, next) {
+    updateItem: function(req, res, next) {
         sys.debug('BlogEntry.itemUpdate()');
         xrest.Resource.itemUpdate.call(this, req, res, next);
         // TODO
     },
 
     // called for: DELETE /blog/:title
-    itemRemove: function(req, res, next) {
+    removeItem: function(req, res, next) {
         sys.debug('BlogEntry.itemRemove()');
         xrest.Resource.itemRemove.call(this, req, res, next);
         // TODO
