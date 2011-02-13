@@ -26,14 +26,14 @@ exports.BlogEntry = new xrest.Resource({
             entry.comments = entry.comments && entry.comments.length || 0;
         });
 
-        // store results on request and pass control to
-        // the next route matching this request:
-        req.entries = entries;
+        // store results in request context and pass
+        // control to the next route matching this request:
+        req.context.entries = entries;
         next();
     },
 
     // called for: POST /blog
-    itemCreate: function(req, res, next) {
+    createItem: function(req, res, next) {
         sys.debug('BlogEntry.itemCreate()');
         xrest.Resource.itemCreate.call(this, req, res, next);
         // TODO
@@ -52,19 +52,19 @@ exports.BlogEntry = new xrest.Resource({
         }, null);
 
         // store it on request and forward to next route
-        req.entry = entry;
+        req.context.entry = entry;
         next();
     },
 
     // called for: PUT /blog/:title
-    itemUpdate: function(req, res, next) {
+    updateItem: function(req, res, next) {
         sys.debug('BlogEntry.itemUpdate()');
         xrest.Resource.itemUpdate.call(this, req, res, next);
         // TODO
     },
 
     // called for: DELETE /blog/:title
-    itemRemove: function(req, res, next) {
+    removeItem: function(req, res, next) {
         sys.debug('BlogEntry.itemRemove()');
         xrest.Resource.itemRemove.call(this, req, res, next);
         // TODO
@@ -80,26 +80,23 @@ exports.BlogEntry = new xrest.Resource({
     // which is render the configured template
 //    itemList: function(req, res, next) {
 //        sys.debug('BlogEntry.itemList()');
-//        xrest.Resource.itemList.call(this, req, res, next);
 //    },
     // called for: GET /blog/new
     // we can just rely on default behaviour for this
     // which is render the configured template
 //    itemCreateForm: function(req, res, next) {
 //        sys.debug('BlogEntry.itemCreateForm()');
-//        xrest.Resource.itemCreateForm.call(this, req, res, next);
 //    },
     // called for: GET /blog/:title
     // we can just rely on default behaviour
-//    itemDetail: function(req, res, next) {
-//        sys.debug('BlogEntry.itemDetail()');
-//        xrest.Resource.itemDetail.call(this, req, res, next);
-//    },
+    itemDetail: function(req, res, next) {
+        sys.debug('BlogEntry.itemDetail()');
+        res.render();
+    },
     // called for: GET /blog/:title/edit
     // we can just rely on default behaviour
 //    itemUpdateForm: function(req, res, next) {
 //        sys.debug('BlogEntry.itemUpdateForm()');
-//        xrest.Resource.itemUpdateForm.call(this, req, res, next);
 //    },
 // fixme just here for debugging
 
