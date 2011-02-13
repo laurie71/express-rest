@@ -28,16 +28,15 @@ exports.BlogEntry = new xrest.Resource({
 
         // store results in request context and pass
         // control to the next route matching this request:
-        req.context.entries = entries;
+        req.context.locals.entries = entries;
         next();
     },
 
-    // called for: POST /blog
-    createItem: function(req, res, next) {
-        sys.debug('BlogEntry.itemCreate()');
-        xrest.Resource.itemCreate.call(this, req, res, next);
-        // TODO
-    },
+//    // called for: POST /blog
+//    createItem: function(req, res, next) {
+//        sys.debug('BlogEntry.itemCreate()');
+//        // TODO
+//    },
 
 
     // ********************
@@ -52,23 +51,21 @@ exports.BlogEntry = new xrest.Resource({
         }, null);
 
         // store it on request and forward to next route
-        req.context.entry = entry;
+        req.context.locals.entry = entry;
         next();
     },
 
-    // called for: PUT /blog/:title
-    updateItem: function(req, res, next) {
-        sys.debug('BlogEntry.itemUpdate()');
-        xrest.Resource.itemUpdate.call(this, req, res, next);
-        // TODO
-    },
+//    // called for: PUT /blog/:title
+//    updateItem: function(req, res, next) {
+//        sys.debug('BlogEntry.itemUpdate()');
+//        // TODO
+//    },
 
-    // called for: DELETE /blog/:title
-    removeItem: function(req, res, next) {
-        sys.debug('BlogEntry.itemRemove()');
-        xrest.Resource.itemRemove.call(this, req, res, next);
-        // TODO
-    },
+//    // called for: DELETE /blog/:title
+//    removeItem: function(req, res, next) {
+//        sys.debug('BlogEntry.itemRemove()');
+//        // TODO
+//    },
 
 
     // ********************
