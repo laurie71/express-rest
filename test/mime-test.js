@@ -86,15 +86,27 @@ function matchTests(tests) {
 
     for (var input in tests) {
         (function() {
-            var supported = input;
-            var expected = tests[supported];
+            var supported = input,
+                expected = tests[supported],
+                accepts, selected;
+
+            // test against FF-style accept header:
+            accepts = new mime.MediaAccept(
+                'text/xml, '+
+                'application/xml, '+
+                'application/xhtml+xml, '+
+                'text/html;q=0.9, '+
+                'text/plain;q=0.8, '+
+                'image/png,*/*;q=0.5');
+
             supported = supported.split(/\s*,\s*/);
-            var selected = mime.match(supported, 'text/xml, application/xml, application/xhtml+xml, text/html;q=0.9, text/plain;q=0.8, image/png,*/*;q=0.5');
+
+            selected = accepts.match(supported);
 
             selected = selected.map(function(match) {
                 return {
-                    type: match.type.type+'/'+match.type.subtype,
-                    quality: match.quality
+                    type: match.media.type+'/'+match.media.subtype,
+                    quality: match.range.quality
                 };
             });
 
